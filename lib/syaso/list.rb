@@ -24,9 +24,7 @@ class Syaso::List < Syaso::Base
   def render(options = {}, &block)
     ops = options.delete(:item)||{}
     self.each(options) do |i|
-      self.buffer do
-        i.render(ops, &block)
-      end
+      i.render(ops, &block)
     end
   end
   
@@ -34,11 +32,10 @@ class Syaso::List < Syaso::Base
   #
   # @param  [Hash]  options
   def each(options = {}, &block)
-    self._render(options) do |i|
+    self._render(options) do |v|
       self.content.each do |i|
         yield(self.item_view(i))
       end
-      ""
     end
   end
   
@@ -53,6 +50,8 @@ class Syaso::List < Syaso::Base
   end
   
   # default html tag
+  #
+  # @return [Symbol]
   def default_html_tag
     :ul
   end
