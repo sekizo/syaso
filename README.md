@@ -37,7 +37,21 @@ in app/views/SOME_VIEW.html.erb
 	  <% end 
 	<% end %>
 	
+HTML "data-*" attributes.
 	
+	<%= Syaso.Base.new(self).render("test", :data => {:view => :syaso, :role => :view}) %>
+	<%#
+	 #=> <div data-role="view" data-view="syaso">test</div>
+	%>
+	
+	# or write simply,
+	
+	<%= Syaso.Base.new(self).render("test", :_view => :syaso, :_role => :view) %>
+	<%#
+	 #=> <div data-role="view" data-view="syaso">test</div>
+	%>
+
+
 
 ## Contributing
 

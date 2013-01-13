@@ -27,6 +27,7 @@ class Syaso::Base
   
   # render content.
   #
+  # @parma  [Object]  content
   # @param  [Hash]  options
   def render(content = nil, options = {}, &block)
     self._render(content, options, &block)
@@ -39,6 +40,7 @@ class Syaso::Base
   
   # render method
   #
+  # @parma  [Object]  content
   # @param  [Hash]  options
   def _render(content = nil, options = {}, &block)
     ops = filter_args(content, options)
@@ -67,6 +69,13 @@ class Syaso::Base
     block_buffer do
       self.context.concat(yield)
     end
+  end
+  
+  # default html data-* attibutes
+  #
+  # @param  [Hash]
+  def default_data_options
+    {}
   end
   
   # default tag
@@ -113,6 +122,23 @@ class Syaso::Base
     
     self.tag = ops.delete(:tag)||self.default_html_tag
     ops = filter_html_class_options(ops)
+    ops = filter_data_options(ops)
+    ops
+  end
+  
+  # filter data options
+  #
+  # @param  [Hash]  options
+  def filter_data_options(options = {})
+    ops = self.default_data_options.merge(options)
+    
+    options.each do |k, v|
+      if k.to_s.match(/^_/)
+        key = "data-#{k.to_s.sub(/^_/, "").gsub(/_/, "-")}"
+        ops[key] = v
+        ops.delete(k)
+      end
+    end
     ops
   end
   
