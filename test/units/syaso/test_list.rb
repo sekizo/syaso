@@ -19,16 +19,16 @@ class TestSyasoList < Test::Unit::TestCase
     should "respond to render items" do
       assert_nothing_raised(Exception) do
         @list.render(:class => [:container]) do |item|
-          item.content
+          @context.concat(item.content)
         end # list.render
       end # assert
     end # should "respond to render items"
     
     should "respond to render item" do
       assert_nothing_raised(Exception) do
-        @list.each(:class => [:container]) do |item|
+        @list.each do |item|
           item.render(:tag => :p, :id => lambda {|i| "item_#{i.content}"}) do |i|
-            i.content
+            @context.concat(i.content)
           end # item.render
         end # list.each
       end # assert

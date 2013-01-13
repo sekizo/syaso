@@ -4,6 +4,8 @@ class Syaso::Base
   #--------------------#
   # constants
   
+  BLOCK_BUFFER = ""
+  
   #--------------------#
   # attributes
   
@@ -21,10 +23,11 @@ class Syaso::Base
   def initialize(context)
     super()
     self.context = context
-    #@@default_html_tag ||= :div
-    #@@default_html_class ||= []
   end
   
+  # render content.
+  #
+  # @param  [Hash]  options
   def render(options = {}, &block)
     self._render(options, &block)
   end
@@ -41,17 +44,28 @@ class Syaso::Base
     ops = filter_options(options)
     self.buffer do
       self.context.content_tag(self.tag, ops) do
-        self.buffer do
-          block_given? ? yield(self) : self.content
+        if block_given?
+           yield(self)
+        else
+          self.buffer do
+            self.content
+          end
         end
       end # context.content_tag
     end # buffer
-  end # context.concat
+  end # _render
+  
+  # block unexpected buffer
+  def block_buffer(&block)
+    yield if block_given?
+    BLOCK_BUFFER
+  end
   
   # buffer contents
   def buffer(&block)
-    self.context.concat(yield)
-    ""
+    block_buffer do
+      self.context.concat(yield)
+    end
   end
   
   # default tag
