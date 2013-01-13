@@ -11,6 +11,10 @@ class TestSyaso < Test::Unit::TestCase
       @syaso = Syaso::Base.new(@context)
     end # setup
     
+    should "process content" do
+      @syaso.render("test", :class => @html_class)
+    end
+    
     should "process html class attributes" do
       @syaso.render(:class => @html_class)
       @html_class.to_s.split(" ").each do |c|

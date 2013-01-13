@@ -28,8 +28,8 @@ class Syaso::Base
   # render content.
   #
   # @param  [Hash]  options
-  def render(options = {}, &block)
-    self._render(options, &block)
+  def render(content = nil, options = {}, &block)
+    self._render(content, options, &block)
   end
   #--------------------#
   protected
@@ -40,8 +40,9 @@ class Syaso::Base
   # render method
   #
   # @param  [Hash]  options
-  def _render(options = {}, &block)
-    ops = filter_options(options)
+  def _render(content = nil, options = {}, &block)
+    ops = filter_args(content, options)
+    ops = filter_options(ops)
     self.buffer do
       self.context.content_tag(self.tag, ops) do
         if block_given?
@@ -84,6 +85,20 @@ class Syaso::Base
   
   #--------------------#
   private
+  
+  # filter render arguments
+  #
+  # @param  [Object]  content
+  # @param  [Hash]  options
+  def filter_args(content = nil, options = {})
+    if (content.is_a?(Hash)) && (options.empty?)
+      ops = content
+    else
+      self.content = ((content.nil?) || (content.empty?)) ? self.content : content 
+      ops = options
+    end
+    ops
+  end
   
   # filter html options
   #
